@@ -193,6 +193,7 @@ export function BlogPage() {
   function selectCategory(id) {
     setActiveCategory((prev) => (prev === id ? null : id))
     setActiveTag('all')
+    setMobileSidebarOpen(false)
   }
 
   return (
@@ -267,7 +268,7 @@ export function BlogPage() {
                 <button
                   type="button"
                   className={activeTag === 'all' ? 'active' : ''}
-                  onClick={() => setActiveTag('all')}
+                  onClick={() => { setActiveTag('all'); setMobileSidebarOpen(false) }}
                 >
                   All ({posts.length})
                 </button>
@@ -277,7 +278,7 @@ export function BlogPage() {
                   <button
                     type="button"
                     className={activeTag === tag.key ? 'active' : ''}
-                    onClick={() => setActiveTag(tag.key)}
+                    onClick={() => { setActiveTag(tag.key); setMobileSidebarOpen(false) }}
                   >
                     #{tag.label} ({tag.count})
                   </button>
