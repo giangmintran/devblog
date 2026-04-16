@@ -1,3 +1,5 @@
+import { Breadcrumb } from '../components/Breadcrumb'
+
 export function ContactPage() {
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'hello@devblog.local'
   const githubUrl = import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/'
@@ -5,6 +7,10 @@ export function ContactPage() {
 
   return (
     <section>
+      <Breadcrumb crumbs={[
+        { label: 'Home', to: '/' },
+        { label: 'Contact' },
+      ]} />
       <div className="hero-banner">
         <p className="eyebrow">Let's Connect</p>
         <h1>Contact Me</h1>

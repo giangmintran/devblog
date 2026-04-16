@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { markdownPostRepository } from '../../infra/content-markdown/markdownPostRepository'
 import { getPostsByTag } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
+import { Breadcrumb } from '../components/Breadcrumb'
 
 export function TagPage() {
   const { tag = '' } = useParams()
@@ -19,6 +20,11 @@ export function TagPage() {
 
   return (
     <section>
+      <Breadcrumb crumbs={[
+        { label: 'Home', to: '/' },
+        { label: 'Blog', to: '/blog' },
+        { label: `#${decodeURIComponent(tag)}` },
+      ]} />
       <div className="section-head">
         <h1 className="page-title">Tag: #{decodeURIComponent(tag)}</h1>
         <Link to="/blog">Back to blog</Link>

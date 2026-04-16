@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import { markdownPostRepository } from '../../infra/content-markdown/markdownPostRepository'
 import { getPostBySlug, getPublishedPosts } from '../../domain/posts/useCases'
 import { getPostPath } from '../utils/postPath'
+import { Breadcrumb } from '../components/Breadcrumb'
 
 function slugify(value) {
   return String(value)
@@ -80,6 +81,13 @@ export function PostPage() {
   return (
     <article className="post-layout">
       <div className="post-main">
+        <Breadcrumb crumbs={[
+          { label: 'Home', to: '/' },
+          post.source === 'dev-life'
+            ? { label: "Dev's Life", to: '/dev-life' }
+            : { label: 'Blog', to: '/blog' },
+          { label: post.title },
+        ]} />
         <p className="eyebrow">{post.category}</p>
         <h1 className="page-title">{post.title}</h1>
         <p className="post-meta">
@@ -105,6 +113,11 @@ export function PostPage() {
                 const id = slugify(text)
                 return <h3 id={id}>{children}</h3>
               },
+              table: ({ children }) => (
+                <div className="post-content-table-wrap">
+                  <table>{children}</table>
+                </div>
+              ),
             }}
           >
             {post.content}

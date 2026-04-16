@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { markdownPostRepository } from '../../infra/content-markdown/markdownPostRepository'
 import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
+import { Breadcrumb } from '../components/Breadcrumb'
 
 export function DevLifePage() {
   const [posts, setPosts] = useState([])
@@ -46,6 +47,10 @@ export function DevLifePage() {
 
   return (
     <section>
+      <Breadcrumb crumbs={[
+        { label: 'Home', to: '/' },
+        { label: "Dev's Life" },
+      ]} />
       <div className="hero-banner">
         <p className="eyebrow">Beyond Code</p>
         <h1>Dev's Life</h1>

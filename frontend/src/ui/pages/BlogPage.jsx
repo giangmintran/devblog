@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { markdownPostRepository } from '../../infra/content-markdown/markdownPostRepository'
 import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
+import { Breadcrumb } from '../components/Breadcrumb'
 
 const CATEGORIES = [
   {
@@ -108,6 +109,7 @@ export function BlogPage() {
   const [activeCategory, setActiveCategory] = useState(null)
   const [expandedCategories, setExpandedCategories] = useState(new Set())
   const [closingCategories, setClosingCategories] = useState(new Set())
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -195,12 +197,26 @@ export function BlogPage() {
 
   return (
     <section>
+      <Breadcrumb crumbs={[
+        { label: 'Home', to: '/' },
+        { label: 'Blog' },
+      ]} />
       <div className="section-head">
         <h1 className="page-title">Blog</h1>
       </div>
 
       <div className="blog-layout">
-        <aside className="blog-sidebar" aria-label="Tag menu">
+        <button
+          type="button"
+          className={`sidebar-mobile-toggle${mobileSidebarOpen ? ' is-open' : ''}`}
+          onClick={() => setMobileSidebarOpen((v) => !v)}
+          aria-expanded={mobileSidebarOpen}
+        >
+          <span>Filters &amp; Categories</span>
+          <span className="sidebar-mobile-toggle-icon">▸</span>
+        </button>
+
+        <aside className={`blog-sidebar${mobileSidebarOpen ? ' mobile-open' : ''}`} aria-label="Tag menu">
           <div className="sidebar-section">
             <h2>Categories</h2>
             <ul className="category-list">
