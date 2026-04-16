@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap');
+@import 'highlight.js/styles/github.css';
+
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-alt: #f7f9ff;
+  --line: #dfe5f2;
+  --ink: #2f3643;
+  --ink-muted: #5f6c84;
+  --ink-strong: #1b2333;
+  --cta: #146257;
+  --cta-hover: #0f4e45;
+  --cta-text: #f8fffd;
+  --hero-bg-a: #eef4ff;
+  --hero-bg-b: #f4efff;
+  --hero-dot-a: rgba(66, 153, 225, 0.16);
+  --hero-dot-b: rgba(124, 58, 237, 0.14);
+  --hero-line: #dbe3f6;
+  --code-bg: #f3f6fd;
+  --shadow-soft: 0 16px 36px rgba(34, 53, 90, 0.08);
+  --sans: 'Source Sans 3', 'Segoe UI', sans-serif;
+  --heading: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', Consolas, monospace;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0f1726;
+  --surface: #182336;
+  --surface-alt: #1d2b42;
+  --line: #2f3f5a;
+  --ink: #dde6f5;
+  --ink-muted: #afbdd4;
+  --ink-strong: #f5f8ff;
+  --cta: #2a9d8f;
+  --cta-hover: #238679;
+  --cta-text: #052221;
+  --hero-bg-a: #1d2a43;
+  --hero-bg-b: #1f2445;
+  --hero-dot-a: rgba(86, 156, 255, 0.2);
+  --hero-dot-b: rgba(167, 139, 250, 0.2);
+  --hero-line: #344764;
+  --code-bg: #111d2f;
+  --shadow-soft: 0 18px 44px rgba(2, 6, 12, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 15% -10%, rgba(125, 162, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(186, 140, 255, 0.16), transparent 36%),
+    var(--bg);
+  color: var(--ink);
+  font: 400 18px/1.45 var(--sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  color: inherit;
+}

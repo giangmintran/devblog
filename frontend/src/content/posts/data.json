@@ -1,0 +1,52 @@
+{
+  "posts": [
+    {
+      "file": "array_vs_list_vs_linked_list.md",
+      "title": "Array vs List vs LinkedList",
+      "slug": "array-list",
+      "category": "dsa",
+      "tags": ["data structures", "algorithms", "dsa", "array", "linked list"],
+      "coverImage": "array-list.svg",
+      "status": "published",
+      "publishedAt": "2026-04-16"
+    },
+    {
+      "file": "stack_queue.md",
+      "title": "Stack & Queue",
+      "slug": "stack-queue",
+      "category": "dsa",
+      "tags": ["data structures", "algorithms", "dsa", "stack", "queue"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "stack_queue.png"
+    }
+  ],
+  "categories": [
+    {
+      "id": "programming-fundamentals",
+      "label": "Programming Fundamentals",
+      "children": [
+        { "id": "dsa", "label": "Data Structures & Algorithms (DSA)" },
+        { "id": "oop-design", "label": "OOP & Design Principles" },
+        { "id": "concurrency", "label": "Concurrency & Async" },
+        { "id": "memory", "label": "Memory Management" },
+        { "id": "clean-code", "label": "Clean Code & Refactoring" },
+        { "id": "design-patterns", "label": "Design Patterns" },
+        { "id": "error-handling", "label": "Error Handling & Debugging" }
+      ]
+    },
+    {
+      "id": "backend-frontend",
+      "label": "Development",
+      "children": [
+        { "id": "backend", "label": "Backend" },
+        { "id": "frontend", "label": "Frontend" }
+      ]
+    },
+    { "id": "system-design", "label": "System Design & Architecture" },
+    { "id": "database", "label": "Database & Data Engineering" },
+    { "id": "security", "label": "Security" },
+    { "id": "devops", "label": "DevOps & Deployment" },
+    { "id": "testing", "label": "Testing" }
+  ]
+}
