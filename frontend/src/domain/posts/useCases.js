@@ -1,18 +1,18 @@
-export async function getPublishedPosts(postRepository) {
-  const posts = await postRepository.getAllPosts()
+export async function getPublishedPosts(postRepository, options = {}) {
+  const posts = await postRepository.getAllPosts(options)
 
   return posts
     .filter((post) => post.status === 'published')
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
 }
 
-export async function getPublishedPostsBySource(postRepository, source) {
-  const posts = await getPublishedPosts(postRepository)
+export async function getPublishedPostsBySource(postRepository, source, options = {}) {
+  const posts = await getPublishedPosts(postRepository, options)
   return posts.filter((post) => post.source === source)
 }
 
-export async function getPostBySlug(postRepository, slug) {
-  const post = await postRepository.getPostBySlug(slug)
+export async function getPostBySlug(postRepository, slug, options = {}) {
+  const post = await postRepository.getPostBySlug(slug, options)
 
   if (!post || post.status !== 'published') {
     return null
@@ -21,9 +21,9 @@ export async function getPostBySlug(postRepository, slug) {
   return post
 }
 
-export async function searchPosts(postRepository, query) {
+export async function searchPosts(postRepository, query, options = {}) {
   const normalizedQuery = query.trim().toLowerCase()
-  const posts = await getPublishedPosts(postRepository)
+  const posts = await getPublishedPosts(postRepository, options)
 
   if (!normalizedQuery) {
     return posts
@@ -35,15 +35,15 @@ export async function searchPosts(postRepository, query) {
   })
 }
 
-export async function getPostsByTag(postRepository, tag) {
+export async function getPostsByTag(postRepository, tag, options = {}) {
   const normalizedTag = tag.trim().toLowerCase()
-  const posts = await getPublishedPosts(postRepository)
+  const posts = await getPublishedPosts(postRepository, options)
 
   return posts.filter((post) => post.tags.some((item) => item.toLowerCase() === normalizedTag))
 }
 
-export async function getPopularTags(postRepository) {
-  const posts = await getPublishedPosts(postRepository)
+export async function getPopularTags(postRepository, options = {}) {
+  const posts = await getPublishedPosts(postRepository, options)
   const counts = new Map()
 
   for (const post of posts) {

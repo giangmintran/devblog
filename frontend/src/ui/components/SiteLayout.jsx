@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 export function SiteLayout() {
   const [theme, setTheme] = useState('light')
   const [menuOpen, setMenuOpen] = useState(false)
+  const { language, setLanguage, supportedLanguages } = useLanguage()
+
+  const languageLabels = {
+    en: 'EN',
+    vi: 'VI',
+  }
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('devblog-theme')
@@ -69,6 +76,23 @@ export function SiteLayout() {
           <button className="theme-switch" type="button" onClick={toggleTheme}>
             {theme === 'dark' ? 'Light' : 'Dark'} mode
           </button>
+          <div className="language-toggle" role="group" aria-label="Select content language">
+            {supportedLanguages.map((code) => {
+              const isActive = language === code
+
+              return (
+                <button
+                  key={code}
+                  type="button"
+                  className={`language-toggle-btn${isActive ? ' is-active' : ''}`}
+                  onClick={() => setLanguage(code)}
+                  aria-pressed={isActive}
+                >
+                  {languageLabels[code] ?? code.toUpperCase()}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </header>
 

@@ -4,8 +4,10 @@ import { markdownPostRepository } from '../../infra/content-markdown/markdownPos
 import { getPopularTags, getPublishedPosts } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { getPostPath } from '../utils/postPath'
+import { useLanguage } from '../context/LanguageContext'
 
 export function HomePage() {
+  const { language } = useLanguage()
   const [latestPosts, setLatestPosts] = useState([])
   const [popularTags, setPopularTags] = useState([])
   const [totalPosts, setTotalPosts] = useState(0)
@@ -13,8 +15,8 @@ export function HomePage() {
   useEffect(() => {
     async function load() {
       const [posts, tags] = await Promise.all([
-        getPublishedPosts(markdownPostRepository),
-        getPopularTags(markdownPostRepository),
+        getPublishedPosts(markdownPostRepository, { locale: language }),
+        getPopularTags(markdownPostRepository, { locale: language }),
       ])
 
       setTotalPosts(posts.length)
@@ -23,7 +25,7 @@ export function HomePage() {
     }
 
     load()
-  }, [])
+  }, [language])
 
   const featuredPost = latestPosts[0] ?? null
   const sidePosts = latestPosts.slice(1)

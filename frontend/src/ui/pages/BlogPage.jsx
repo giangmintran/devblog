@@ -3,6 +3,7 @@ import { markdownPostRepository } from '../../infra/content-markdown/markdownPos
 import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
+import { useLanguage } from '../context/LanguageContext'
 
 const CATEGORIES = [
   {
@@ -102,7 +103,18 @@ function getCategoryById(id) {
   return null
 }
 
+function getParentCategoryId(id) {
+  for (const cat of CATEGORIES) {
+    if (cat.children) {
+      const child = cat.children.find((c) => c.id === id)
+      if (child) return cat.id
+    }
+  }
+  return null
+}
+
 export function BlogPage() {
+  const { language } = useLanguage()
   const [posts, setPosts] = useState([])
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState('all')
@@ -113,12 +125,12 @@ export function BlogPage() {
 
   useEffect(() => {
     async function load() {
-      const publishedPosts = await getPublishedPostsBySource(markdownPostRepository, 'posts')
+      const publishedPosts = await getPublishedPostsBySource(markdownPostRepository, 'posts', { locale: language })
       setPosts(publishedPosts)
     }
 
     load()
-  }, [])
+  }, [language])
 
   const tagCounts = useMemo(() => {
     const counts = new Map()
@@ -191,6 +203,25 @@ export function BlogPage() {
   }
 
   function selectCategory(id) {
+    if (id === 'all') {
+      setExpandedCategories(new Set())
+      setClosingCategories(new Set())
+      setActiveCategory(null)
+      setActiveTag('all')
+      setMobileSidebarOpen(false)
+      return
+    }
+
+    const parentId = getParentCategoryId(id)
+
+    if (parentId) {
+      setExpandedCategories(new Set([parentId]))
+      setClosingCategories(new Set())
+    } else {
+      setExpandedCategories(new Set())
+      setClosingCategories(new Set())
+    }
+
     setActiveCategory((prev) => (prev === id ? null : id))
     setActiveTag('all')
     setMobileSidebarOpen(false)
@@ -221,6 +252,17 @@ export function BlogPage() {
           <div className="sidebar-section">
             <h2>Categories</h2>
             <ul className="category-list">
+              <li className="category-item">
+                <div className="category-row">
+                  <button
+                    type="button"
+                    className={`category-btn${activeCategory === null ? ' active' : ''}`}
+                    onClick={() => selectCategory('all')}
+                  >
+                    <span>All Categories ({posts.length})</span>
+                  </button>
+                </div>
+              </li>
               {CATEGORIES.map((cat) => (
                 <li key={cat.id} className={`category-item${cat.children && expandedCategories.has(cat.id) && !closingCategories.has(cat.id) ? ' is-open' : ''}`}>
                   <div className="category-row">

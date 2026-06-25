@@ -4,19 +4,21 @@ import { markdownPostRepository } from '../../infra/content-markdown/markdownPos
 import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
+import { useLanguage } from '../context/LanguageContext'
 
 export function DevLifePage() {
+  const { language } = useLanguage()
   const [posts, setPosts] = useState([])
   const [activeTag, setActiveTag] = useState('all')
 
   useEffect(() => {
     async function load() {
-      const allPosts = await getPublishedPostsBySource(markdownPostRepository, 'dev-life')
+      const allPosts = await getPublishedPostsBySource(markdownPostRepository, 'dev-life', { locale: language })
       setPosts(allPosts)
     }
 
     load()
-  }, [])
+  }, [language])
 
   const tagCounts = useMemo(() => {
     const counts = new Map()

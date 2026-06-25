@@ -4,19 +4,21 @@ import { markdownPostRepository } from '../../infra/content-markdown/markdownPos
 import { getPostsByTag } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
+import { useLanguage } from '../context/LanguageContext'
 
 export function TagPage() {
   const { tag = '' } = useParams()
+  const { language } = useLanguage()
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
     async function load() {
-      const results = await getPostsByTag(markdownPostRepository, decodeURIComponent(tag))
+      const results = await getPostsByTag(markdownPostRepository, decodeURIComponent(tag), { locale: language })
       setPosts(results)
     }
 
     load()
-  }, [tag])
+  }, [tag, language])
 
   return (
     <section>

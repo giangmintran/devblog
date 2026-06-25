@@ -6,7 +6,7 @@
       "slug": "array-list",
       "category": "dsa",
       "tags": ["data structures", "algorithms", "dsa", "array", "linked list"],
-      "coverImage": "array-list.svg",
+      "coverImage": "array_vs_list_vs_linked_list.svg",
       "status": "published",
       "publishedAt": "2026-04-16"
     },
@@ -19,6 +19,186 @@
       "status": "published",
       "publishedAt": "2026-04-16",
       "coverImage": "stack_queue.png"
+    },
+    {
+      "file": "oop_design.md",
+      "title": "OOP & Design Principles",
+      "slug": "oop-design",
+      "category": "oop-design",
+      "tags": ["oop", "design principles", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "oop_design.png"
+    },
+    {
+      "file": "oop_overview.md",
+      "title": "OOP Overview",
+      "slug": "oop-overview",
+      "category": "oop-design",
+      "tags": ["oop", "design principles", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "oop_overview.png"
+    },
+    {
+      "file": "concurrency.md",
+      "title": "Concurrency & Async",
+      "slug": "concurrency-async",
+      "category": "concurrency",
+      "tags": ["concurrency", "async", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "concurrency.png"
+    },
+    {
+      "file": "memory_management.md",
+      "title": "Memory Management",
+      "slug": "memory-management",
+      "category": "memory",
+      "tags": ["memory management", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "memory_management.png"
+    },
+    {
+      "file": "clean_code.md",
+      "title": "Clean Code & Refactoring",
+      "slug": "clean-code-refactoring",
+      "category": "clean-code",
+      "tags": ["clean code", "refactoring", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "clean_code.png"
+    },
+    {
+      "file": "design_patterns.md",
+      "title": "Design Patterns",
+      "slug": "design-patterns",
+      "category": "design-patterns",
+      "tags": ["design patterns", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "error_handling.md",
+      "title": "Error Handling & Debugging",
+      "slug": "error-handling-debugging",
+      "category": "error-handling",
+      "tags": ["error handling", "debugging", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "system_design.md",
+      "title": "System Design & Architecture",
+      "slug": "system-design-architecture",
+      "category": "system-design",
+      "tags": ["system design", "architecture"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "http_vs_https.md",
+      "title": "HTTP vs HTTPS",
+      "slug": "http-vs-https",
+      "category": "security",
+      "tags": ["http", "https", "security"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": "http-vs-https.png"
+    },
+    {
+      "file": "sql_vs_nosql.md",
+      "title": "SQL vs NoSQL",
+      "slug": "sql-vs-nosql",
+      "category": "database",
+      "tags": ["sql", "nosql", "database"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "devops_overview.md",
+      "title": "DevOps Overview",
+      "slug": "devops-overview",
+      "category": "devops",
+      "tags": ["devops", "deployment"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "testing_overview.md",
+      "title": "Testing Overview",
+      "slug": "testing-overview",
+      "category": "testing",
+      "tags": ["testing"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "backend_overview.md",
+      "title": "Backend Overview",
+      "slug": "backend-overview",
+      "category": "backend",
+      "tags": ["backend", "development"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "frontend_overview.md",
+      "title": "Frontend Overview",
+      "slug": "frontend-overview",
+      "category": "frontend",
+      "tags": ["frontend", "development"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "rest_vs_graphql.md",
+      "title": "REST vs GraphQL",
+      "slug": "rest-vs-graphql",
+      "category": "backend",
+      "tags": ["rest", "graphql", "backend", "development"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "monolith_vs_microservices.md",
+      "title": "Monolith vs Microservices",
+      "slug": "monolith-vs-microservices",
+      "category": "backend",
+      "tags": ["monolith", "microservices", "backend", "development"],
+      "status": "published",
+      "publishedAt": "2026-04-16",
+      "coverImage": ""
+    },
+    {
+      "file": "http1_vs_http2.md",
+      "title": "HTTP/1 vs HTTP/2",
+      "slug": "http1-vs-http2",
+      "category": "backend",
+      "tags": ["http1", "http2", "backend", "development"],
+      "status": "published",
+      "publishedAt": "2026-06-26",
+      "coverImage": "http1_vs_http2.png"
+    },
+    {
+      "file": "design_pattern_why_design_pattern_exist_at_all.md",
+      "title": "Why Design Patterns Exist at All?",
+      "slug": "why-design-patterns-exist",
+      "category": "design-patterns",
+      "tags": ["design patterns", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-06-26",
+      "coverImage": "design_pattern_why_design_pattern_exist_at_all.png"
     }
   ],
   "categories": [

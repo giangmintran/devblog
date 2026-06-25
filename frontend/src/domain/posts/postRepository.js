@@ -1,9 +1,9 @@
 export class PostRepository {
-  async getAllPosts() {
+  async getAllPosts(_options = {}) {
     throw new Error('Not implemented')
   }
 
-  async getPostBySlug(_slug) {
+  async getPostBySlug(_slug, _options = {}) {
     throw new Error('Not implemented')
   }
 }

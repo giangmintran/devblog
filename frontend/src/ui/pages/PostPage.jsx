@@ -7,6 +7,7 @@ import { markdownPostRepository } from '../../infra/content-markdown/markdownPos
 import { getPostBySlug, getPublishedPosts } from '../../domain/posts/useCases'
 import { getPostPath } from '../utils/postPath'
 import { Breadcrumb } from '../components/Breadcrumb'
+import { useLanguage } from '../context/LanguageContext'
 
 function slugify(value) {
   return String(value)
@@ -19,14 +20,15 @@ function slugify(value) {
 
 export function PostPage() {
   const { slug = '' } = useParams()
+  const { language } = useLanguage()
   const [post, setPost] = useState(null)
   const [allPosts, setAllPosts] = useState([])
 
   useEffect(() => {
     async function load() {
       const [data, publishedPosts] = await Promise.all([
-        getPostBySlug(markdownPostRepository, decodeURIComponent(slug)),
-        getPublishedPosts(markdownPostRepository),
+        getPostBySlug(markdownPostRepository, decodeURIComponent(slug), { locale: language }),
+        getPublishedPosts(markdownPostRepository, { locale: language }),
       ])
 
       setPost(data)
@@ -34,7 +36,7 @@ export function PostPage() {
     }
 
     load()
-  }, [slug])
+  }, [slug, language])
 
   const relatedPosts = useMemo(() => {
     if (!post) {

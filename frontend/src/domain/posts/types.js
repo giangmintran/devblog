@@ -2,6 +2,8 @@
  * @typedef {Object} Post
  * @property {string} id
  * @property {string} slug
+ * @property {string} translationKey
+ * @property {'en' | 'vi'} locale
  * @property {string} title
  * @property {string} summary
  * @property {string[]} tags
@@ -13,7 +15,7 @@
  * @property {string} updatedAt
  * @property {string=} coverImage
  * @property {string=} canonicalUrl
- * @property {"blog" | "dev-life"} source
+ * @property {"blog" | "posts" | "dev-life"} source
  * @property {string} content
  * @property {number} readingTimeMinutes
  */

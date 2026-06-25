@@ -2,6 +2,8 @@ import { PostRepository } from '../../domain/posts/postRepository'
 import postsData from '../../content/posts/data.json'
 
 const postsMetaByFile = new Map(postsData.posts.map((entry) => [entry.file, entry]))
+const DEFAULT_LOCALE = 'en'
+const SUPPORTED_LOCALES = new Set(['en', 'vi'])
 
 const markdownFiles = import.meta.glob(['../../content/blog/*.md', '../../content/dev-life/*.md', '../../content/posts/*.md'], {
   eager: true,
@@ -28,6 +30,27 @@ const postImageByBasePath = Object.entries(postImageFiles).reduce((accumulator, 
 }, new Map())
 
 const fallbackDate = '1970-01-01'
+
+function normalizeLocale(locale) {
+  const normalized = String(locale ?? '').trim().toLowerCase()
+  return SUPPORTED_LOCALES.has(normalized) ? normalized : DEFAULT_LOCALE
+}
+
+function parseLocalizedStem(fileStem) {
+  const match = String(fileStem).match(/^(.*)\.(en|vi)$/i)
+
+  if (!match) {
+    return {
+      canonicalStem: String(fileStem),
+      locale: DEFAULT_LOCALE,
+    }
+  }
+
+  return {
+    canonicalStem: match[1],
+    locale: normalizeLocale(match[2]),
+  }
+}
 
 function slugify(value) {
   return value
@@ -155,14 +178,18 @@ function parsePost(filePath, raw) {
   const data = attributes ?? {}
   const content = body ?? ''
   const fileName = filePath.split('/').pop()?.replace(/\.md$/, '') ?? ''
+  const { canonicalStem, locale } = parseLocalizedStem(fileName)
+  const canonicalFileName = `${canonicalStem}.md`
   const source = filePath.includes('/content/dev-life/') ? 'dev-life' : filePath.includes('/content/posts/') ? 'posts' : 'blog'
 
   // Merge metadata from data.json for posts source
-  const jsonMeta = source === 'posts' ? (postsMetaByFile.get(`${fileName}.md`) ?? {}) : {}
+  const jsonMeta = source === 'posts'
+    ? (postsMetaByFile.get(canonicalFileName) ?? postsMetaByFile.get(`${fileName}.md`) ?? {})
+    : {}
 
   const { derivedTitle, derivedSummary } = extractTitleAndSummary(content)
-  const title = String(jsonMeta.title ?? data.title ?? derivedTitle ?? fileName ?? 'Untitled')
-  const slug = String(jsonMeta.slug ?? data.slug ?? slugify(title || fileName))
+  const title = String(jsonMeta.title ?? data.title ?? derivedTitle ?? canonicalStem ?? 'Untitled')
+  const slug = String(jsonMeta.slug ?? data.slug ?? slugify(title || canonicalStem))
   const rawSummary = String(data.summary ?? derivedSummary ?? stripMarkdown(content).slice(0, 100))
   const summary = rawSummary.length > 100 ? rawSummary.slice(0, 100).trimEnd() + '…' : rawSummary
   const basePath = filePath.replace(/\.md$/, '')
@@ -179,6 +206,8 @@ function parsePost(filePath, raw) {
 
   return {
     id: String(jsonMeta.slug ?? data.id ?? slug),
+    translationKey: `${source}:${canonicalStem}`,
+    locale,
     slug,
     title,
     summary,
@@ -197,13 +226,33 @@ function parsePost(filePath, raw) {
   }
 }
 
-export class MarkdownPostRepository extends PostRepository {
-  async getAllPosts() {
-    return Object.entries(markdownFiles).map(([filePath, raw]) => parsePost(filePath, raw))
+function selectLocalizedPosts(posts, preferredLocale) {
+  const groupedByTranslation = new Map()
+
+  for (const post of posts) {
+    const key = post.translationKey || `${post.source}:${post.slug}`
+
+    if (!groupedByTranslation.has(key)) {
+      groupedByTranslation.set(key, new Map())
+    }
+
+    groupedByTranslation.get(key).set(post.locale || DEFAULT_LOCALE, post)
   }
 
-  async getPostBySlug(slug) {
-    const posts = await this.getAllPosts()
+  return [...groupedByTranslation.values()].map((group) => {
+    return group.get(preferredLocale) || group.get(DEFAULT_LOCALE) || group.values().next().value
+  })
+}
+
+export class MarkdownPostRepository extends PostRepository {
+  async getAllPosts(options = {}) {
+    const preferredLocale = normalizeLocale(options.locale)
+    const parsedPosts = Object.entries(markdownFiles).map(([filePath, raw]) => parsePost(filePath, raw))
+    return selectLocalizedPosts(parsedPosts, preferredLocale)
+  }
+
+  async getPostBySlug(slug, options = {}) {
+    const posts = await this.getAllPosts(options)
     return posts.find((post) => post.slug === slug) ?? null
   }
 }
