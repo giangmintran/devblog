@@ -1,7 +1,9 @@
 import { PostRepository } from '../../domain/posts/postRepository'
 import postsData from '../../content/posts/data.json'
+import devLifeData from '../../content/dev-life/data.json'
 
 const postsMetaByFile = new Map(postsData.posts.map((entry) => [entry.file, entry]))
+const devLifeMetaByFile = new Map(devLifeData.posts.map((entry) => [entry.file, entry]))
 const DEFAULT_LOCALE = 'en'
 const SUPPORTED_LOCALES = new Set(['en', 'vi'])
 
@@ -182,15 +184,18 @@ function parsePost(filePath, raw) {
   const canonicalFileName = `${canonicalStem}.md`
   const source = filePath.includes('/content/dev-life/') ? 'dev-life' : filePath.includes('/content/posts/') ? 'posts' : 'blog'
 
-  // Merge metadata from data.json for posts source
-  const jsonMeta = source === 'posts'
-    ? (postsMetaByFile.get(canonicalFileName) ?? postsMetaByFile.get(`${fileName}.md`) ?? {})
-    : {}
+  // Merge metadata from data.json for posts/dev-life source
+  let jsonMeta = {}
+  if (source === 'posts') {
+    jsonMeta = postsMetaByFile.get(canonicalFileName) ?? postsMetaByFile.get(`${fileName}.md`) ?? {}
+  } else if (source === 'dev-life') {
+    jsonMeta = devLifeMetaByFile.get(canonicalFileName) ?? devLifeMetaByFile.get(`${fileName}.md`) ?? {}
+  }
 
   const { derivedTitle, derivedSummary } = extractTitleAndSummary(content)
-  const title = String(jsonMeta.title ?? data.title ?? derivedTitle ?? canonicalStem ?? 'Untitled')
-  const slug = String(jsonMeta.slug ?? data.slug ?? slugify(title || canonicalStem))
-  const rawSummary = String(data.summary ?? derivedSummary ?? stripMarkdown(content).slice(0, 100))
+  const title = String(data.title ?? jsonMeta.title ?? derivedTitle ?? canonicalStem ?? 'Untitled')
+  const slug = String(data.slug ?? jsonMeta.slug ?? slugify(title || canonicalStem))
+  const rawSummary = String(data.summary ?? jsonMeta.summary ?? derivedSummary ?? stripMarkdown(content).slice(0, 100))
   const summary = rawSummary.length > 100 ? rawSummary.slice(0, 100).trimEnd() + '…' : rawSummary
   const basePath = filePath.replace(/\.md$/, '')
   const dirPath = filePath.substring(0, filePath.lastIndexOf('/'))
@@ -198,32 +203,38 @@ function parsePost(filePath, raw) {
     ? postImageByBasePath.get(`${dirPath}/${jsonMeta.coverImage.replace(/\.[^.]+$/, '')}`) ?? ''
     : ''
   const autoCoverImage = jsonCoverImage || postImageByBasePath.get(basePath) || ''
-  const publishedDate = jsonMeta.publishedAt ?? resolvePublishedDate(data)
-  const updatedDate = resolveUpdatedDate(data, publishedDate)
-  const tags = jsonMeta.tags ?? (Array.isArray(data.tags) ? data.tags.map(String) : [])
-  const rawStatus = jsonMeta.status ?? data.status
+  const publishedDate = data.publishedAt ?? jsonMeta.publishedAt ?? resolvePublishedDate(data)
+  const updatedDate = resolveUpdatedDate({ ...jsonMeta, ...data }, publishedDate)
+  const tags = Array.isArray(data.tags)
+    ? data.tags.map(String)
+    : (Array.isArray(jsonMeta.tags) ? jsonMeta.tags.map(String) : [])
+  const rawStatus = data.status ?? jsonMeta.status
   const status = rawStatus === 'draft' || rawStatus === 'archived' ? rawStatus : 'published'
 
   return {
-    id: String(jsonMeta.slug ?? data.id ?? slug),
+    id: String(data.id ?? jsonMeta.slug ?? slug),
     translationKey: `${source}:${canonicalStem}`,
     locale,
     slug,
     title,
     summary,
     tags,
-    category: String(jsonMeta.category ?? data.category ?? 'software-engineering'),
-    authorId: String(data.authorId ?? 'admin'),
-    seriesId: data.seriesId ? String(data.seriesId) : '',
+    category: String(data.category ?? jsonMeta.category ?? 'software-engineering'),
+    authorId: String(data.authorId ?? jsonMeta.authorId ?? 'admin'),
+    seriesId: data.seriesId ? String(data.seriesId) : (jsonMeta.seriesId ? String(jsonMeta.seriesId) : ''),
     status,
     publishedAt: toDateString(publishedDate, fallbackDate),
     updatedAt: toDateString(updatedDate, fallbackDate),
     coverImage: data.coverImage ? String(data.coverImage) : autoCoverImage,
-    canonicalUrl: data.canonicalUrl ? String(data.canonicalUrl) : '',
+    canonicalUrl: data.canonicalUrl ? String(data.canonicalUrl) : (jsonMeta.canonicalUrl ? String(jsonMeta.canonicalUrl) : ''),
     source,
     content,
     readingTimeMinutes: estimateReadingTime(content),
   }
+}
+
+function hasRenderableContent(post) {
+  return typeof post.content === 'string' && post.content.trim().length > 0
 }
 
 function selectLocalizedPosts(posts, preferredLocale) {
@@ -240,7 +251,22 @@ function selectLocalizedPosts(posts, preferredLocale) {
   }
 
   return [...groupedByTranslation.values()].map((group) => {
-    return group.get(preferredLocale) || group.get(DEFAULT_LOCALE) || group.values().next().value
+    const preferred = group.get(preferredLocale)
+
+    if (preferred && hasRenderableContent(preferred)) {
+      return preferred
+    }
+
+    const english = group.get(DEFAULT_LOCALE)
+    if (english && hasRenderableContent(english)) {
+      return english
+    }
+
+    if (preferred) {
+      return preferred
+    }
+
+    return group.values().next().value
   })
 }
 

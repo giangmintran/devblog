@@ -4,6 +4,24 @@ import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { useLanguage } from '../context/LanguageContext'
+import { isVietnamese } from '../utils/locale'
+import { BLOG_POSTS_PER_PAGE } from '../config/pagination'
+
+function ChevronLeftIcon() {
+  return (
+    <svg className="pagination-btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg className="pagination-btn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 const CATEGORIES = [
   {
@@ -115,6 +133,7 @@ function getParentCategoryId(id) {
 
 export function BlogPage() {
   const { language } = useLanguage()
+  const vi = isVietnamese(language)
   const [posts, setPosts] = useState([])
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState('all')
@@ -122,6 +141,7 @@ export function BlogPage() {
   const [expandedCategories, setExpandedCategories] = useState(new Set())
   const [closingCategories, setClosingCategories] = useState(new Set())
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     async function load() {
@@ -180,6 +200,22 @@ export function BlogPage() {
     })
   }, [posts, query, activeTag, activeCategory])
 
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / BLOG_POSTS_PER_PAGE))
+  const paginatedPosts = useMemo(() => {
+    const start = (currentPage - 1) * BLOG_POSTS_PER_PAGE
+    return filteredPosts.slice(start, start + BLOG_POSTS_PER_PAGE)
+  }, [filteredPosts, currentPage])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [query, activeTag, activeCategory, language])
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
+
   const CLOSE_DURATION = 220
 
   function toggleCategory(id) {
@@ -230,7 +266,7 @@ export function BlogPage() {
   return (
     <section>
       <Breadcrumb crumbs={[
-        { label: 'Home', to: '/' },
+        { label: vi ? 'Trang chủ' : 'Home', to: '/' },
         { label: 'Blog' },
       ]} />
       <div className="section-head">
@@ -244,13 +280,13 @@ export function BlogPage() {
           onClick={() => setMobileSidebarOpen((v) => !v)}
           aria-expanded={mobileSidebarOpen}
         >
-          <span>Filters &amp; Categories</span>
+          <span>{vi ? 'Bộ lọc &amp; Danh mục' : 'Filters & Categories'}</span>
           <span className="sidebar-mobile-toggle-icon">▸</span>
         </button>
 
         <aside className={`blog-sidebar${mobileSidebarOpen ? ' mobile-open' : ''}`} aria-label="Tag menu">
           <div className="sidebar-section">
-            <h2>Categories</h2>
+            <h2>{vi ? 'Danh mục' : 'Categories'}</h2>
             <ul className="category-list">
               <li className="category-item">
                 <div className="category-row">
@@ -259,7 +295,7 @@ export function BlogPage() {
                     className={`category-btn${activeCategory === null ? ' active' : ''}`}
                     onClick={() => selectCategory('all')}
                   >
-                    <span>All Categories ({posts.length})</span>
+                    <span>{vi ? `Tất cả danh mục (${posts.length})` : `All Categories (${posts.length})`}</span>
                   </button>
                 </div>
               </li>
@@ -312,7 +348,7 @@ export function BlogPage() {
                   className={activeTag === 'all' ? 'active' : ''}
                   onClick={() => { setActiveTag('all'); setMobileSidebarOpen(false) }}
                 >
-                  All ({posts.length})
+                  {vi ? `Tất cả (${posts.length})` : `All (${posts.length})`}
                 </button>
               </li>
               {tagCounts.map((tag) => (
@@ -332,7 +368,7 @@ export function BlogPage() {
 
         <div className="blog-content">
           <label htmlFor="search" className="search-label">
-            Search posts
+            {vi ? 'Tìm kiếm' : 'Search posts'}
           </label>
           <input
             id="search"
@@ -340,16 +376,56 @@ export function BlogPage() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by title, summary, tags"
+            placeholder={vi ? 'Tìm theo tiêu đề, tóm tắt, thẻ' : 'Search by title, summary, tags'}
           />
 
-          <p className="results-count">{filteredPosts.length} post(s)</p>
+          <p className="results-count">{vi ? `${filteredPosts.length} bài viết` : `${filteredPosts.length} post(s)`}</p>
 
           <div className="blog-post-list">
-            {filteredPosts.map((post) => (
+            {paginatedPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>
+
+          {totalPages > 1 ? (
+            <nav className="pagination" aria-label={vi ? 'Phân trang bài viết' : 'Post pagination'}>
+              <button
+                type="button"
+                className="pagination-btn"
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeftIcon /> {vi ? 'Trước' : 'Previous'}
+              </button>
+
+              <div className="pagination-pages">
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const page = index + 1
+
+                  return (
+                    <button
+                      key={page}
+                      type="button"
+                      className={`pagination-page${currentPage === page ? ' active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                      aria-current={currentPage === page ? 'page' : undefined}
+                    >
+                      {page}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <button
+                type="button"
+                className="pagination-btn"
+                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                disabled={currentPage === totalPages}
+              >
+                {vi ? 'Sau' : 'Next'} <ChevronRightIcon />
+              </button>
+            </nav>
+          ) : null}
         </div>
       </div>
     </section>

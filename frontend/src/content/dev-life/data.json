@@ -1,0 +1,31 @@
+{
+  "posts": [
+    {
+      "file": "avoiding-burnout-in-release-weeks.md",
+      "slug": "avoiding-burnout-in-release-weeks",
+      "category": "dev-life",
+      "tags": ["work-life", "team", "productivity"],
+      "status": "published",
+      "publishedAt": "2026-04-05",
+      "coverImage": "avoiding-burnout-in-release-weeks.avif"
+    },
+    {
+      "file": "code-review-with-empathy.md",
+      "slug": "code-review-with-empathy",
+      "category": "dev-life",
+      "tags": ["team", "career", "decision-making"],
+      "status": "published",
+      "publishedAt": "2026-04-06",
+      "coverImage": "code-review-with-empathy.svg"
+    },
+    {
+      "file": "how-i-plan-my-week-as-a-developer.md",
+      "slug": "how-i-plan-my-week-as-a-developer",
+      "category": "dev-life",
+      "tags": ["productivity", "work-life", "career"],
+      "status": "published",
+      "publishedAt": "2026-04-08",
+      "coverImage": "how-i-plan-my-week-as-a-developer.svg"
+    }
+  ]
+}

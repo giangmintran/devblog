@@ -8,6 +8,7 @@ import { getPostBySlug, getPublishedPosts } from '../../domain/posts/useCases'
 import { getPostPath } from '../utils/postPath'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { useLanguage } from '../context/LanguageContext'
+import { formatDateByLanguage, isVietnamese } from '../utils/locale'
 
 function slugify(value) {
   return String(value)
@@ -21,6 +22,7 @@ function slugify(value) {
 export function PostPage() {
   const { slug = '' } = useParams()
   const { language } = useLanguage()
+  const vi = isVietnamese(language)
   const [post, setPost] = useState(null)
   const [allPosts, setAllPosts] = useState([])
 
@@ -73,9 +75,9 @@ export function PostPage() {
   if (!post) {
     return (
       <section>
-        <h1 className="page-title">Post not found</h1>
-        <p>This article does not exist or is not published.</p>
-        <Link to="/blog">Back to blog</Link>
+        <h1 className="page-title">{vi ? 'Không tìm thấy nội dung' : 'Post not found'}</h1>
+        <p>{vi ? 'Bài viết không tồn tại hoặc chưa được xuất bản.' : 'This article does not exist or is not published.'}</p>
+        <Link to="/blog">{vi ? 'Quay lại blog' : 'Back to blog'}</Link>
       </section>
     )
   }
@@ -84,20 +86,20 @@ export function PostPage() {
     <article className="post-layout">
       <div className="post-main">
         <Breadcrumb crumbs={[
-          { label: 'Home', to: '/' },
+          { label: vi ? 'Trang chủ' : 'Home', to: '/' },
           post.source === 'dev-life'
-            ? { label: "Dev's Life", to: '/dev-life' }
+            ? { label: vi ? 'Dev\'s life' : "Dev's Life", to: '/dev-life' }
             : { label: 'Blog', to: '/blog' },
           { label: post.title },
         ]} />
         <p className="eyebrow">{post.category}</p>
         <h1 className="page-title">{post.title}</h1>
         <p className="post-meta">
-          <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+          <span>{formatDateByLanguage(post.publishedAt, language)}</span>
         </p>
 
         {post.coverImage ? (
-          <img className="post-cover" src={post.coverImage} alt={`Cover for ${post.title}`} loading="lazy" />
+          <img className="post-cover" src={post.coverImage} alt={vi ? `Anh bia cho ${post.title}` : `Cover for ${post.title}`} loading="lazy" />
         ) : null}
 
         <div className="post-content">
@@ -127,8 +129,8 @@ export function PostPage() {
         </div>
       </div>
 
-      <aside className="post-toc" aria-label="Related posts">
-        <h2>Related posts</h2>
+      <aside className="post-toc" aria-label={vi ? 'Bài viết liên quan' : 'Related posts'}>
+        <h2>{vi ? 'Bài viết liên quan' : 'Related posts'}</h2>
         {relatedPosts.length ? (
           <ul>
             {relatedPosts.map((item) => (
@@ -138,7 +140,7 @@ export function PostPage() {
             ))}
           </ul>
         ) : (
-          <p className="related-empty">No related posts yet.</p>
+          <p className="related-empty">{vi ? 'Chưa có bài viết liên quan.' : 'No related posts yet.'}</p>
         )}
       </aside>
     </article>

@@ -5,9 +5,11 @@ import { getPublishedPostsBySource } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { useLanguage } from '../context/LanguageContext'
+import { isVietnamese } from '../utils/locale'
 
 export function DevLifePage() {
   const { language } = useLanguage()
+  const vi = isVietnamese(language)
   const [posts, setPosts] = useState([])
   const [activeTag, setActiveTag] = useState('all')
 
@@ -50,32 +52,33 @@ export function DevLifePage() {
   return (
     <section>
       <Breadcrumb crumbs={[
-        { label: 'Home', to: '/' },
-        { label: "Dev's Life" },
+        { label: vi ? 'Trang chủ' : 'Home', to: '/' },
+        { label: vi ? 'Dev\'s life' : "Dev's Life" },
       ]} />
       <div className="hero-banner">
         <p className="eyebrow">Beyond Code</p>
-        <h1>Dev's Life</h1>
+        <h1>{vi ? 'Dev\'s life' : "Dev's Life"}</h1>
         <p>
-          Stories, habits, and lessons around teamwork, career growth, and sustainable
-          engineering life.
+          {vi
+            ? 'Câu chuyện, bài học và góc nhìn về sự nghiệp, làm việc nhóm và cuộc sống của một lập trình viên.'
+            : 'Stories, habits, and lessons around teamwork, career growth, and sustainable engineering life.'}
         </p>
         <img
           className="hero-illustration hero-illustration-small"
           src="/images/dev-life-balance.jpg"
-          alt="Illustration representing work life balance for developers"
+          alt={vi ? 'Minh họa cân bằng công việc và cuộc sống của lập trình viên' : 'Illustration representing work life balance for developers'}
           loading="lazy"
         />
       </div>
 
       <div className="section-head">
-        <h2>Articles</h2>
-        <Link to="/blog">View all posts</Link>
+        <h2>{vi ? 'Bài viết' : 'Articles'}</h2>
+        <Link to="/blog">{vi ? 'Xem tất cả bài viết' : 'View all posts'}</Link>
       </div>
 
       {posts.length ? (
         <div className="blog-layout">
-          <aside className="blog-sidebar" aria-label="DevLife tag menu">
+          <aside className="blog-sidebar" aria-label={vi ? 'Menu the Dev Life' : 'DevLife tag menu'}>
             <h2>Tags</h2>
             <ul>
               <li>
@@ -84,7 +87,7 @@ export function DevLifePage() {
                   className={activeTag === 'all' ? 'active' : ''}
                   onClick={() => setActiveTag('all')}
                 >
-                  All ({posts.length})
+                  {vi ? `Tất cả (${posts.length})` : `All (${posts.length})`}
                 </button>
               </li>
               {tagCounts.map((tag) => (
@@ -102,7 +105,7 @@ export function DevLifePage() {
           </aside>
 
           <div className="blog-content">
-            <p className="results-count">{filteredPosts.length} post(s)</p>
+            <p className="results-count">{vi ? `${filteredPosts.length} bài viết` : `${filteredPosts.length} post(s)`}</p>
             <div className="blog-post-list">
               {filteredPosts.map((post) => (
                 <PostCard key={post.id} post={post} />
@@ -111,7 +114,7 @@ export function DevLifePage() {
           </div>
         </div>
       ) : (
-        <p>No Dev's Life posts yet. Add Markdown files inside src/content/dev-life.</p>
+        <p>{vi ? 'Chưa có bài Dev Life. Hãy thêm file Markdown trong src/content/dev-life.' : 'No Dev\'s Life posts yet. Add Markdown files inside src/content/dev-life.'}</p>
       )}
     </section>
   )

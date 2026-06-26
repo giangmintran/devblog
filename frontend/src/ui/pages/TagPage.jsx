@@ -5,10 +5,12 @@ import { getPostsByTag } from '../../domain/posts/useCases'
 import { PostCard } from '../components/PostCard'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { useLanguage } from '../context/LanguageContext'
+import { isVietnamese } from '../utils/locale'
 
 export function TagPage() {
   const { tag = '' } = useParams()
   const { language } = useLanguage()
+  const vi = isVietnamese(language)
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -23,13 +25,13 @@ export function TagPage() {
   return (
     <section>
       <Breadcrumb crumbs={[
-        { label: 'Home', to: '/' },
+        { label: vi ? 'Trang chủ' : 'Home', to: '/' },
         { label: 'Blog', to: '/blog' },
         { label: `#${decodeURIComponent(tag)}` },
       ]} />
       <div className="section-head">
-        <h1 className="page-title">Tag: #{decodeURIComponent(tag)}</h1>
-        <Link to="/blog">Back to blog</Link>
+        <h1 className="page-title">{vi ? `The: #${decodeURIComponent(tag)}` : `Tag: #${decodeURIComponent(tag)}`}</h1>
+        <Link to="/blog">{vi ? 'Quay lai blog' : 'Back to blog'}</Link>
       </div>
 
       <div className="card-grid">

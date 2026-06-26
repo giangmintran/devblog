@@ -5,7 +5,7 @@
       "title": "Array vs List vs LinkedList",
       "slug": "array-list",
       "category": "dsa",
-      "tags": ["data structures", "algorithms", "dsa", "array", "linked list"],
+      "tags": ["dsa", "programming fundamentals"],
       "coverImage": "array_vs_list_vs_linked_list.svg",
       "status": "published",
       "publishedAt": "2026-04-16"
@@ -15,7 +15,7 @@
       "title": "Stack & Queue",
       "slug": "stack-queue",
       "category": "dsa",
-      "tags": ["data structures", "algorithms", "dsa", "stack", "queue"],
+      "tags": ["dsa", "programming fundamentals"],
       "status": "published",
       "publishedAt": "2026-04-16",
       "coverImage": "stack_queue.png"
@@ -185,7 +185,7 @@
       "title": "HTTP/1 vs HTTP/2",
       "slug": "http1-vs-http2",
       "category": "backend",
-      "tags": ["http1", "http2", "backend", "development"],
+      "tags": ["http", "backend", "development"],
       "status": "published",
       "publishedAt": "2026-06-26",
       "coverImage": "http1_vs_http2.png"
@@ -195,10 +195,40 @@
       "title": "Why Design Patterns Exist at All?",
       "slug": "why-design-patterns-exist",
       "category": "design-patterns",
-      "tags": ["design patterns", "programming fundamentals"],
+      "tags": ["backend", "development"],
       "status": "published",
       "publishedAt": "2026-06-26",
       "coverImage": "design_pattern_why_design_pattern_exist_at_all.png"
+    },
+    {
+      "file": "what_is_refactoring.md",
+      "title": "What is Refactoring?",
+      "slug": "what-is-refactoring",
+      "category": "clean-code",
+      "tags": ["clean code", "refactoring", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-06-26",
+      "coverImage": "what_is_refactoring.png"
+    },
+    {
+      "file": "technical_debt.md",
+      "title": "What is Technical Debt?",
+      "slug": "what-is-technical-debt",
+      "category": "clean-code",
+      "tags": ["clean code", "refactoring", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-06-26",
+      "coverImage": "technical_debt.png"
+    },
+    {
+      "file": "when_to_refactor.md",
+      "title": "When to Refactor?",
+      "slug": "when-to-refactor",
+      "category": "clean-code",
+      "tags": ["clean code", "refactoring", "programming fundamentals"],
+      "status": "published",
+      "publishedAt": "2026-06-26",
+      "coverImage": "when_to_refactor.png"
     }
   ],
   "categories": [

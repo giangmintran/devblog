@@ -26,7 +26,7 @@ Xay dung 1 trang web Dev Blog chia se kien thuc Software Engineering voi cac tie
 - Author (tam thoi qua git): viet va publish bai bang cach tao/sua file Markdown va deploy.
 
 ## 4. Yeu cau chuc nang
-### FR-01: Trang chu
+### FR-01: Trang chủ
 - Hien thi bai moi nhat, bai noi bat, cac tag pho bien.
 - Co link toi trang Blog, Tags, About.
 
